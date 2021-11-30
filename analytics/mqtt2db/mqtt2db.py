@@ -71,9 +71,18 @@ class MQTT2DB(object):
                 r.update(r["tags"])
                 del r["tags"]
 
-            if ("time" not in r) and ("real_base" in r) and ("timestamp" in r): 
+            print(r)
+
+            if ("time" not in r) and ("real_base" in r) and ("timestamp" in r):
                 real_base=r["real_base"] if "real_base" in r else 0
                 r["time"] = int((real_base + r["timestamp"]) / 1000000)
+                print("time based on real_base={}".format(r['time']))
+
+            if ("custom_start_time" in r) and ("timestamp" in r):
+                video_base = r["custom_start_time"] if "custom_start_time" in r else 0
+                r["time"] = int((video_base + r["timestamp"]) / 1000000)
+                print("time based on custom_start_time={}".format(r['time']))
+
 
             if "objects" in r and scenario == "traffic":
                 r["nobjects"] = int(len(r["objects"]))

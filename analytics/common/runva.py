@@ -28,7 +28,7 @@ class RunVA(object):
                 time.sleep(5)
         print("mqtt connected", flush=True)
         mqtt.disconnect()
-    
+
     def __init__(self, pipeline, version="2", stop=Event()):
         super(RunVA, self).__init__()
         self._test_mqtt_connection()
@@ -62,13 +62,15 @@ class RunVA(object):
                     "topic": topic
                 }
                 tags={
-                    "sensor": sensor, 
-                    "location": location, 
+                    "sensor": sensor,
+                    "location": location,
                     "algorithm": algorithmName,
                     "office": {
-                        "lat": office[0], 
+                        "lat": office[0],
                         "lon": office[1]
                     },
+                    # Setting a custom time, this can be passed in like sensor, location etc
+                    "custom_start_time": 1538235783042570429
                 }
                 parameters = {
                     "inference-interval": every_nth_frame,
@@ -93,7 +95,7 @@ class RunVA(object):
 
                     if status.state.stopped():
                         print("Pipeline {} Version {} Instance {} Ended with {}".format(
-                            self._pipeline, self._version, instance_id, status.state.name), 
+                            self._pipeline, self._version, instance_id, status.state.name),
                             flush=True)
                         break
 
