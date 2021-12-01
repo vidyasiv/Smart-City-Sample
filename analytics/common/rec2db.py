@@ -15,7 +15,7 @@ class Handler(FileSystemEventHandler):
         self._sensor = sensor
         self._last_file = None
         self._requests=requests.Session()
-    
+
     def on_created(self, event):
         print("on_created: "+event.src_path, flush=True)
         if event.is_directory: return
@@ -29,9 +29,12 @@ class Handler(FileSystemEventHandler):
         self._last_file = event.src_path
 
     def _process_file(self, filename):
+        video_base = 1538235783042570429
+        print("filename is {}".format(filename))
         with open(filename,"rb") as fd:
             r=self._requests.post(sthost,data={
-                "time":str(int(int(os.path.basename(filename).split('_')[-2])/1000000)),
+                "time": str(int(int(os.path.basename(filename).rstrip('.mp4').split('_')[-1])+video_base/1000000)),
+                "orig_time":str(int(int(os.path.basename(filename).split('_')[-2])/1000000)),
                 "office":str(office[0])+","+str(office[1]),
                 "sensor":self._sensor,
             },files={
