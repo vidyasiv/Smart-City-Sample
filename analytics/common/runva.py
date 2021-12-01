@@ -70,7 +70,8 @@ class RunVA(object):
                         "lon": office[1]
                     },
                     # Setting a custom time, this can be passed in like sensor, location etc
-                    "custom_start_time": 1538235783042570429
+                    "custom_start_time": 1008235783042570420
+
                 }
                 parameters = {
                     "inference-interval": every_nth_frame,

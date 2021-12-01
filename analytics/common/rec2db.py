@@ -5,6 +5,7 @@ from watchdog.events import FileSystemEventHandler
 from configuration import env
 import requests
 import os
+import datetime
 
 office=list(map(float,env["OFFICE"].split(",")))
 sthost=env["STHOST"]
@@ -29,11 +30,16 @@ class Handler(FileSystemEventHandler):
         self._last_file = event.src_path
 
     def _process_file(self, filename):
-        video_base = 1538235783042570429
-        print("filename is {}".format(filename))
+
+        video_base = 1008235783042570420
+        # Real base 1638326863379333614
+        # Filename example: '/tmp/rec/5ocgc30BswPB8WWEg2ml/2021/11/30/1638314060090100076_239493104.mp4'
+        file_offset=int(os.path.splitext(os.path.basename(filename))[0].split('_')[-1])
+        custom_time = str(int((file_offset + video_base)/1000000))
+        print("filename is {}, time is {}".format(filename, custom_time))
         with open(filename,"rb") as fd:
             r=self._requests.post(sthost,data={
-                "time": str(int(int(os.path.basename(filename).rstrip('.mp4').split('_')[-1])+video_base/1000000)),
+                "time": custom_time,
                 "orig_time":str(int(int(os.path.basename(filename).split('_')[-2])/1000000)),
                 "office":str(office[0])+","+str(office[1]),
                 "sensor":self._sensor,
